@@ -23,10 +23,20 @@ describe('server responses', () => {
 
   it('should respond to a GET request for a swim command', (done) => {
     // write your test here
-    done();
+    let {req, res} = server.mock('/', 'GET');
+
+    httpHandler.router(req, res, () => {
+      // tests here
+      expect(res._responseCode).to.equal(200);
+      expect(res._ended).to.equal(true);
+      // console.log(res, 'response')
+      console.log(res._data.toString())
+
+      done();
+    });
   });
 
-  xit('should respond with 404 to a GET request for a missing background image', (done) => {
+  it('should respond with 404 to a GET request for a missing background image', (done) => {
     httpHandler.backgroundImageFile = path.join('.', 'spec', 'missing.jpg');
     let {req, res} = server.mock('FILL_ME_IN', 'GET');
 
@@ -38,7 +48,13 @@ describe('server responses', () => {
   });
 
   xit('should respond with 200 to a GET request for a present background image', (done) => {
+    httpHandler.backgroundImageFile = path.join('.', 'spec', 'temp.jpg');
     // write your test here
+    let {req, res} = server.mock('/background', 'GET');
+
+    httpHandler.router(req, res);
+    expect(res._responseCode).to.equal(200);
+    expect(res._ended).to.equal(true);
     done();
   });
 
